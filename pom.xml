@@ -19,6 +19,8 @@
     <name>plugins/Maxima_ImageJ.jar</name>
     <description>This is plugin for ImageJ that connects to Maxima</description>
 
+    
+
     <developers>
         <developer>
             <id>120542G</id>
@@ -45,7 +47,15 @@
     <properties>
         <main-class>Maxima_ImageJ</main-class>
     </properties>
-
+    
+    <repositories>
+        <repository>
+            <id>jacomax</id>
+            <name>jacomax</name>
+            <url>http://www2.ph.ed.ac.uk/maven2/</url>
+        </repository>        
+    </repositories>
+    
     <dependencies>
         <dependency>
             <groupId>net.imagej</groupId>
@@ -61,6 +71,12 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.5.11</version>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.ed.ph.jacomax</groupId>
+            <artifactId>jacomax</artifactId>
+            <version>0.2.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>
