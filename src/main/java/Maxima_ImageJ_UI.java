@@ -46,6 +46,7 @@ public class Maxima_ImageJ_UI {
                 resutlText.setLineWrap(true);
                 resutlText.setWrapStyleWord(true);
                 resutlText.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+                resutlText.setEditable(false);
                 JScrollPane resultScroll = new JScrollPane(resutlText);
                 frame.add(resultScroll, BorderLayout.SOUTH);
 
