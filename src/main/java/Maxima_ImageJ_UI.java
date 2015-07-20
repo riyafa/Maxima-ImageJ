@@ -11,11 +11,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -112,6 +109,7 @@ public class Maxima_ImageJ_UI {
                     } else {
                         try {
                             Files.delete(new File("jacomax.properties").toPath());
+                            startMaxima();
                         } catch (IOException ex1) {
                             System.err.println(ex);
                         }
