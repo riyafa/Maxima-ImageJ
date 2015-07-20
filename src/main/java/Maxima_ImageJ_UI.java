@@ -1,4 +1,3 @@
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -12,7 +11,6 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.function.Predicate;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -144,13 +142,19 @@ public class Maxima_ImageJ_UI {
         try {
             List<String> ls = WinRegistry.readStringSubKeys(WinRegistry.HKEY_LOCAL_MACHINE,
                     "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", WinRegistry.KEY_WOW64_32KEY);
-            String key = ls.stream().filter(new Predicate<String>() {
+            /*String key = ls.stream().filter(new Predicate<String>() {
 
                 @Override
                 public boolean test(String t) {
                     return t.matches("Maxima.*");
                 }
-            }).findAny().get();
+            }).findAny().get();*/
+            String key=null;
+            for (String s: ls) {
+                if (s.matches("Maxima.*")) {
+                    key=s;
+                }
+            }
             if (key.contains("sbcl")) {
                 JOptionPane.showMessageDialog(frame, "Currently Maxima-ImageJ"
                         + " does not support sbcl version of Maxima", "ERROR",

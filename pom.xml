@@ -14,10 +14,13 @@
 
     <groupId>maxima.imagej</groupId>
     <artifactId>maxima_imagej</artifactId>
+    
+    <packaging>jar</packaging>
+    
     <version>0.1.0-SNAPSHOT</version>
-
     <name>plugins/Maxima_ImageJ.jar</name>
     <description>This is plugin for ImageJ that connects to Maxima</description>
+
 
     
 
@@ -82,11 +85,12 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>${main-class}</mainClass>
+                            <mainClass>Maxima_ImageJ</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
