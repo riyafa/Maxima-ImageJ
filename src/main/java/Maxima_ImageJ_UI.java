@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -11,6 +12,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.NoSuchElementException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,10 +21,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import uk.ac.ed.ph.jacomax.JacomaxSimpleConfigurator;
-import uk.ac.ed.ph.jacomax.MaximaConfiguration;
+import uk.ac.ed.ph.jacomax.JacomaxRuntimeException;
 import uk.ac.ed.ph.jacomax.MaximaInteractiveProcess;
-import uk.ac.ed.ph.jacomax.MaximaProcessLauncher;
 import uk.ac.ed.ph.jacomax.MaximaTimeoutException;
 
 /**
@@ -69,7 +69,7 @@ public class Maxima_ImageJ_UI {
                         try {
                             String result;
                             result = textArea.getText();
-                            result = calculate(result);
+                            result = Maxima_Evaluate.calculate(result, process);
                             resutlText.append(result + "\n");
 
                         } catch (MaximaTimeoutException ex) {
@@ -98,8 +98,8 @@ public class Maxima_ImageJ_UI {
                 //frame.setSize(500, 400);
                 frame.pack();
                 try {
-                    startMaxima();
-                frame.setVisible(true);
+                    process = Maxima_Connect.startMaxima();
+                    frame.setVisible(true);
                 } catch (uk.ac.ed.ph.jacomax.JacomaxRuntimeException ex) {
                     System.err.println(ex.getMessage());
                     if (System.getProperty("os.name").contains("Windows")) {
@@ -107,7 +107,9 @@ public class Maxima_ImageJ_UI {
                     } else {
                         try {
                             Files.delete(new File("jacomax.properties").toPath());
-                            startMaxima();
+                            process = Maxima_Connect.startMaxima();
+                            frame.setVisible(true);
+
                         } catch (IOException ex1) {
                             System.err.println(ex);
                         }
@@ -115,61 +117,28 @@ public class Maxima_ImageJ_UI {
                 }
             }
         });
-        terminateMaxima();
-    }
-
-    public void startMaxima() {
-        MaximaConfiguration configuration = JacomaxSimpleConfigurator.configure();
-
-        MaximaProcessLauncher launcher = new MaximaProcessLauncher(configuration);
-
-        process = launcher.launchInteractiveProcess();
-    }
-
-    public String calculate(String expression) throws MaximaTimeoutException {
-        String returnStringFromMaxima = process.executeCall(expression);
-        return returnStringFromMaxima;
-    }
-
-    public void terminateMaxima() {
-
-        if (process != null) {
-            process.terminate();
-        }
+        Maxima_Connect.terminateMaxima(process);
     }
 
     private void locateMaxima(JFrame frame) {
         try {
-            List<String> ls = WinRegistry.readStringSubKeys(WinRegistry.HKEY_LOCAL_MACHINE,
-                    "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", WinRegistry.KEY_WOW64_32KEY);
-            /*String key = ls.stream().filter(new Predicate<String>() {
-
-                @Override
-                public boolean test(String t) {
-                    return t.matches("Maxima.*");
-                }
-            }).findAny().get();*/
-            String key=null;
-            for (String s: ls) {
+            List<String> ls = WinRegistry.readStringSubKeys(WinRegistry.HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", WinRegistry.KEY_WOW64_32KEY);
+            String key = null;
+            for (String s : ls) {
                 if (s.matches("Maxima.*")) {
-                    key=s;
+                    key = s;
                 }
             }
             if (key.contains("sbcl")) {
-                JOptionPane.showMessageDialog(frame, "Currently Maxima-ImageJ"
-                        + " does not support sbcl version of Maxima", "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Currently Maxima-ImageJ" + " does not support sbcl version of Maxima", "ERROR", JOptionPane.ERROR_MESSAGE);
                 frame.setVisible(false);
             } else {
                 PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("jacomax.properties")));
-                String path = WinRegistry.readString(WinRegistry.HKEY_LOCAL_MACHINE,
-                        "SOFTWARE\\Wow6432Node\\Microsoft\\Windows"
-                        + "\\CurrentVersion\\Uninstall\\" + key,
-                        "Inno Setup: App Path", WinRegistry.KEY_WOW64_32KEY);
+                String path = WinRegistry.readString(WinRegistry.HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Microsoft\\Windows" + "\\CurrentVersion\\Uninstall\\" + key, "Inno Setup: App Path", WinRegistry.KEY_WOW64_32KEY);
                 System.out.println(path.replace("\\", "\\\\"));
                 pw.print("jacomax.maxima.path=" + path.replace("\\", "\\\\") + "\\\\bin\\\\maxima.bat");
                 pw.close();
-                startMaxima();
+                process = Maxima_Connect.startMaxima();
                 frame.setVisible(true);
             }
         } catch (IllegalArgumentException ex) {
@@ -178,18 +147,14 @@ public class Maxima_ImageJ_UI {
             System.err.println(ex);
         } catch (InvocationTargetException ex) {
             System.err.println(ex);
-        } catch (java.util.NoSuchElementException ex) {
-            JOptionPane.showMessageDialog(frame, "Maxima-ImageJ could not "
-                    + "detect maxima on your computer.",
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
+        } catch (NoSuchElementException ex) {
+            JOptionPane.showMessageDialog(frame, "Maxima-ImageJ could not " + "detect maxima on your computer.", "ERROR", JOptionPane.ERROR_MESSAGE);
             System.err.println(ex);
             frame.setVisible(false);
         } catch (IOException ex) {
             System.err.println(ex);
-        }catch (uk.ac.ed.ph.jacomax.JacomaxRuntimeException ex){
-            JOptionPane.showMessageDialog(frame, "Maxima-ImageJ could not "
-                    + "detect maxima on your computer.",
-                    "ERROR", JOptionPane.ERROR_MESSAGE);
+        } catch (JacomaxRuntimeException ex) {
+            JOptionPane.showMessageDialog(frame, "Maxima-ImageJ could not " + "detect maxima on your computer.", "ERROR", JOptionPane.ERROR_MESSAGE);
             System.err.println(ex);
             frame.setVisible(false);
         }
