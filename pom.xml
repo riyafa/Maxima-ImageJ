@@ -62,7 +62,8 @@
     <dependencies>
         <dependency>
             <groupId>net.imagej</groupId>
-            <artifactId>ij</artifactId>            
+            <artifactId>ij</artifactId> 
+            <scope>provided</scope>           
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -14,7 +14,6 @@ public class Maxima_ImageJ implements PlugIn{
         
     }
     public static void main(String[] args) {
-        new ij.ImageJ();
         new Maxima_ImageJ().run("");
     }
     
