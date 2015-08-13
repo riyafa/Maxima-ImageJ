@@ -43,7 +43,7 @@ public class Maxima_ConnectTest {
     /**
      * Test of startMaxima method, of class Maxima_Connect.
      */
-    @Test(expected = uk.ac.ed.ph.jacomax.JacomaxRuntimeException.class)
+    /*@Test(expected = uk.ac.ed.ph.jacomax.JacomaxRuntimeException.class)
     public void testStartMaxima() {
         System.out.println("startMaxima");
 
@@ -54,7 +54,7 @@ public class Maxima_ConnectTest {
         }
         Maxima_Connect.startMaxima();
     }
-
+*/
     /**
      * Test of terminateMaxima method, of class Maxima_Connect.
      */
