@@ -21,52 +21,107 @@ import uk.ac.ed.ph.jacomax.MaximaTimeoutException;
  */
 public class Maxima_ImageJ_UI {
 
+    /*the constants to be used to create the actionlisteners for the testButton
+     and the clearButton
+     */
+    private final int TEST = 1, CLEAR = 2;
+    //the frame
+    private JFrame frame;
+    //the borderPanel to include a border   
+    private JPanel borderPanel;
+    private JLabel firstLabel;
+    private JTextArea inputTextArea;
+    private JScrollPane inputScrollPane;
+    private JTextArea resutlTextArea;
+    private JScrollPane resultScrollPane;
+    //a borderPanel for the buttons
+    private JPanel buttonPanel;
+    private JButton testButton;
+    private JButton clearButton;
     //the maxima process used
-    private MaximaInteractiveProcess process = null;
+    private MaximaInteractiveProcess process;
+
+    public Maxima_ImageJ_UI() {
+        this.process = null;
+        init();
+    }
 
     public void start() {
-
         //run the ui in a separate thread
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
-                //the frame
-                final JFrame frame = new JFrame("Maxima_ImageJ");
-
-                //the panel to include a border
-                JPanel panel = new JPanel(new BorderLayout());
-                JLabel label = new JLabel("Enter the input for Maxima-Follow each line by a semicolon:");
-                panel.add(label, BorderLayout.NORTH);
-                final JTextArea textArea = new JTextArea(10, 40);
-                textArea.setLineWrap(true);
-                textArea.setWrapStyleWord(true);
-                textArea.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                panel.add(scrollPane, BorderLayout.SOUTH);
-                frame.add(panel, BorderLayout.NORTH);
+                borderPanel.add(firstLabel, BorderLayout.NORTH);
+                inputTextArea.setLineWrap(true);
+                inputTextArea.setWrapStyleWord(true);
+                inputTextArea.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+                borderPanel.add(inputScrollPane, BorderLayout.SOUTH);
+                frame.add(borderPanel, BorderLayout.NORTH);
 
                 //the text area to show the results
-                final JTextArea resutlText = new JTextArea(10, 40);
-                resutlText.setLineWrap(true);
-                resutlText.setWrapStyleWord(true);
-                resutlText.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
-                resutlText.setEditable(false);
-                JScrollPane resultScroll = new JScrollPane(resutlText);
-                frame.add(resultScroll, BorderLayout.SOUTH);
+                resutlTextArea.setLineWrap(true);
+                resutlTextArea.setWrapStyleWord(true);
+                resutlTextArea.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+                resutlTextArea.setEditable(false);
+                frame.add(resultScrollPane, BorderLayout.SOUTH);
 
-                //a panel for the buttons
-                JPanel buttonPanel = new JPanel(new BorderLayout());
-                JButton testButton = new JButton("Test");
+                //the button to test the input
                 testButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                testButton.addActionListener(new ActionListener() {
+                testButton.addActionListener(getActions(TEST));
+                buttonPanel.add(testButton, BorderLayout.CENTER);
+                //the button to clear the inputTextArea
+                clearButton.addActionListener(getActions(CLEAR));
+                clearButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                buttonPanel.add(clearButton, BorderLayout.AFTER_LINE_ENDS);
+                frame.add(buttonPanel, BorderLayout.CENTER);
+
+                frame.pack();
+
+                //this starts maxima
+                process = Maxima_Connect.startMaxima();
+                //open frame if frameVisibility is true
+                frame.setVisible(Maxima_Connect.frameVisibility);
+            }
+        });
+
+        //once frame is closed terminate maxima
+        Maxima_Connect.terminateMaxima(process);
+    }
+
+    /**
+     * This method initializes the UI components of the class
+     */
+    private void init() {
+        frame = new JFrame("Maxima_ImageJ");
+        borderPanel = new JPanel(new BorderLayout());
+        firstLabel = new JLabel("Enter the input for Maxima-Follow each line by a semicolon:");
+        inputTextArea = new JTextArea(10, 40);
+        inputScrollPane = new JScrollPane(inputTextArea);
+        resutlTextArea = new JTextArea(10, 40);
+        resultScrollPane = new JScrollPane(resutlTextArea);
+        buttonPanel = new JPanel(new BorderLayout());
+        testButton = new JButton("Test");
+        clearButton = new JButton("Clear");
+
+    }
+
+    /**
+     * This method was created to avoid a lengthy start method. It creates the
+     * ActionListeners required by the testButton and clearButton
+     *
+     */
+    private ActionListener getActions(int name) {
+        switch (name) {
+            case TEST:
+                return new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         try {
                             String result;
-                            result = textArea.getText();
+                            result = inputTextArea.getText();
+                            //calculates the input
                             result = Maxima_Evaluate.calculate(result, process);
-                            resutlText.append(result + "\n");
+                            resutlTextArea.append(result + "\n");
 
                         } catch (MaximaTimeoutException ex) {
                             System.err.println(ex);
@@ -76,34 +131,18 @@ public class Maxima_ImageJ_UI {
                             JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                });
-                buttonPanel.add(testButton, BorderLayout.CENTER);
-                JButton clearButton = new JButton("Clear");
-                clearButton.addActionListener(new ActionListener() {
+                };
+            case CLEAR:
+                return new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        textArea.setText("");
-                        resutlText.setText("");
+                        inputTextArea.setText("");
+                        resutlTextArea.setText("");
                     }
-                });
-                clearButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                buttonPanel.add(clearButton, BorderLayout.AFTER_LINE_ENDS);
-                frame.add(buttonPanel, BorderLayout.CENTER);
-
-                //resultLabel.setPreferredSize(new Dimension(250,100));
-                //frame.setSize(500, 400);
-                frame.pack();
-                //this starts maxima
-               
-                    process = Maxima_Connect.startMaxima();
-                    //open frame if frameVisibility is true
-                    frame.setVisible(Maxima_Connect.frameVisibility);
-                
-            }
-        });
-        //once frame is closed terminate maxima
-        Maxima_Connect.terminateMaxima(process);
+                };
+            default:
+                return null;
+        }
     }
 
-    
 }

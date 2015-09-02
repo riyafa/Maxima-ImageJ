@@ -20,17 +20,24 @@ import uk.ac.ed.ph.jacomax.MaximaProcessLauncher;
  * @author riyafa
  */
 public class Maxima_Connect {
-
+    
+    /**
+     *this is to be used by the gui of the plugin to start the gui only if 
+     * everything seemed ok. true if everything is set to open the gui, false
+     * if otherwise.
+     */
     public static boolean frameVisibility = false;
     private static MaximaInteractiveProcess process = null;
 
     /**
      * calls the methods of the Jacomax library to create and start a Maxima
      * process
+     * @return Returns a Maxima process as a MaximaInteractiveProcess
      */
     public static MaximaInteractiveProcess startMaxima() {
 
         try {
+            //creates the MaximaInteractiveProcess process
             createProcess();
             //frame can be visible if there's no exceptions
             frameVisibility = true;
@@ -43,7 +50,7 @@ public class Maxima_Connect {
                 locateMaxima();
             } else {
                 try {
-                    //if another OS(linux) then exception because of the jacomax file
+                    //if another OS(linux) then exception is because of the jacomax file
                     //delete file
                     Files.delete(new File("jacomax.properties").toPath());
                     createProcess();
@@ -51,7 +58,9 @@ public class Maxima_Connect {
                     frameVisibility = true;
 
                 } catch (IOException ex1) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+                    //cannot delete file
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
 
                 }
             }
@@ -71,14 +80,23 @@ public class Maxima_Connect {
             }
             // currently our plugin doesn't support sbcl version of Maxima
             if (key.contains("sbcl")) {
-                JOptionPane.showMessageDialog(null, "Currently Maxima-ImageJ" + " does not support sbcl version of Maxima", "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Currently Maxima-ImageJ" +
+                        " does not support sbcl version of Maxima", "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
                 frameVisibility = false;
             } else {
-                //locates path of Maxima
-                PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("jacomax.properties")));
-                String path = WinRegistry.readString(WinRegistry.HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Microsoft\\Windows" + "\\CurrentVersion\\Uninstall\\" + key, "Inno Setup: App Path", WinRegistry.KEY_WOW64_32KEY);
+                //locates path of Maxima using the class WinRegistry which searches
+                //through windows registry to locate maxima
+                PrintWriter pw = new PrintWriter(new BufferedWriter(
+                        new FileWriter("jacomax.properties")));
+                String path = WinRegistry.readString(
+                        WinRegistry.HKEY_LOCAL_MACHINE, 
+                        "SOFTWARE\\Wow6432Node\\Microsoft\\Windows" + 
+                                "\\CurrentVersion\\Uninstall\\" + key, 
+                        "Inno Setup: App Path", WinRegistry.KEY_WOW64_32KEY);
                 System.out.println(path.replace("\\", "\\\\"));
-                pw.print("jacomax.maxima.path=" + path.replace("\\", "\\\\") + "\\\\bin\\\\maxima.bat");
+                pw.print("jacomax.maxima.path=" + path.replace("\\", "\\\\") +
+                        "\\\\bin\\\\maxima.bat");
                 pw.close();
                 createProcess();
                 frameVisibility = true;
@@ -91,16 +109,25 @@ public class Maxima_Connect {
             System.err.println(ex);
         } catch (NoSuchElementException ex) {
             //no maxima in machine
-            JOptionPane.showMessageDialog(null, "Maxima-ImageJ could not " + "detect maxima on your computer.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Maxima-ImageJ could not " +
+                    "detect maxima on your computer.", "ERROR", JOptionPane.ERROR_MESSAGE);
             System.err.println(ex);
             frameVisibility = false;
         } catch (IOException ex) {
+            //cannot create jacomax.properties file
             System.err.println(ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
         } catch (JacomaxRuntimeException ex) {
             //no maxima in machine
-            JOptionPane.showMessageDialog(null, "Maxima-ImageJ could not " + "detect maxima on your computer.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Maxima-ImageJ could not " + 
+                    "detect maxima on your computer.", "ERROR", JOptionPane.ERROR_MESSAGE);
             System.err.println(ex);
             frameVisibility = false;
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(null, "Maxima-ImageJ could not " +
+                    "detect maxima on your computer.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            System.err.println(ex);
         }
     }
 

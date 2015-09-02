@@ -12,7 +12,7 @@ public class Maxima_Evaluate {
      * @param expression the expression to pass to Maxima and obtain results
      * @param process   the maxima process to be used created by calling startMaxima method
      * @throws uk.ac.ed.ph.jacomax.MaximaTimeoutException Rethrows the exception 
-     * thrown by calling the executeCall method of the MaximaInteractiveProcess
+     * which gets thrown by caling the executeCall method of the MaximaInteractiveProcess
  */
     public static String calculate(String expression, MaximaInteractiveProcess process) throws MaximaTimeoutException {
         

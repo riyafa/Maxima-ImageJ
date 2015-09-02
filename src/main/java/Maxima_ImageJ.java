@@ -1,5 +1,6 @@
 
 import ij.plugin.PlugIn;
+import java.awt.EventQueue;
 
 /**
  *
@@ -7,28 +8,16 @@ import ij.plugin.PlugIn;
  */
 public class Maxima_ImageJ implements PlugIn {
 
-    private boolean startUI;
-
-    public Maxima_ImageJ(boolean startUI) {
-        this.startUI = startUI;
-    }
-    //default is false
-    public Maxima_ImageJ(){
-        this(false);
-    }
     @Override
     public void run(String string) {
-        if (startUI) {
-            new Maxima_ImageJ_UI().start();
-
-        }else{
-            Maxima_Connect.startMaxima();
-        }
+        new Maxima_ImageJ_UI().start();
+       
 
     }
 
     public static void main(String[] args) {
-        new Maxima_ImageJ(true).run("");
+        new ij.ImageJ();
+        new Maxima_ImageJ().run("");
     }
 
 }
