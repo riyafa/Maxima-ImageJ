@@ -11,6 +11,7 @@ public class Maxima_Evaluate {
  *calls the methods of the jacomax library to  compute the string expression 
      * @param expression the expression to pass to Maxima and obtain results
      * @param process   the maxima process to be used created by calling startMaxima method
+     * @return the result from maxima
      * @throws uk.ac.ed.ph.jacomax.MaximaTimeoutException Rethrows the exception 
      * which gets thrown by caling the executeCall method of the MaximaInteractiveProcess
  */

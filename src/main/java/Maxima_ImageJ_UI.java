@@ -19,14 +19,12 @@ import uk.ac.ed.ph.jacomax.MaximaTimeoutException;
  *
  * @author riyafa
  */
-public class Maxima_ImageJ_UI {
+public class Maxima_ImageJ_UI extends JFrame{
 
     /*the constants to be used to create the actionlisteners for the testButton
      and the clearButton
      */
     private final int TEST = 1, CLEAR = 2;
-    //the frame
-    private JFrame frame;
     //the borderPanel to include a border   
     private JPanel borderPanel;
     private JLabel firstLabel;
@@ -56,14 +54,14 @@ public class Maxima_ImageJ_UI {
                 inputTextArea.setWrapStyleWord(true);
                 inputTextArea.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
                 borderPanel.add(inputScrollPane, BorderLayout.SOUTH);
-                frame.add(borderPanel, BorderLayout.NORTH);
+                add(borderPanel, BorderLayout.NORTH);
 
                 //the text area to show the results
                 resutlTextArea.setLineWrap(true);
                 resutlTextArea.setWrapStyleWord(true);
                 resutlTextArea.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
                 resutlTextArea.setEditable(false);
-                frame.add(resultScrollPane, BorderLayout.SOUTH);
+                add(resultScrollPane, BorderLayout.SOUTH);
 
                 //the button to test the input
                 testButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -73,14 +71,14 @@ public class Maxima_ImageJ_UI {
                 clearButton.addActionListener(getActions(CLEAR));
                 clearButton.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 buttonPanel.add(clearButton, BorderLayout.AFTER_LINE_ENDS);
-                frame.add(buttonPanel, BorderLayout.CENTER);
+                add(buttonPanel, BorderLayout.CENTER);
 
-                frame.pack();
+                pack();
 
                 //this starts maxima
                 process = Maxima_Connect.startMaxima();
                 //open frame if frameVisibility is true
-                frame.setVisible(Maxima_Connect.frameVisibility);
+                setVisible(Maxima_Connect.frameVisibility);
             }
         });
 
@@ -92,17 +90,19 @@ public class Maxima_ImageJ_UI {
      * This method initializes the UI components of the class
      */
     private void init() {
-        frame = new JFrame("Maxima_ImageJ");
         borderPanel = new JPanel(new BorderLayout());
         firstLabel = new JLabel("Enter the input for Maxima-Follow each line by a semicolon:");
         inputTextArea = new JTextArea(10, 40);
+        inputTextArea.setName("InputTextArea");
         inputScrollPane = new JScrollPane(inputTextArea);
         resutlTextArea = new JTextArea(10, 40);
+        resutlTextArea.setName("ResutlTextArea");
         resultScrollPane = new JScrollPane(resutlTextArea);
         buttonPanel = new JPanel(new BorderLayout());
         testButton = new JButton("Test");
+        testButton.setName("TestButton");
         clearButton = new JButton("Clear");
-
+        clearButton.setName("ClearButton");
     }
 
     /**
@@ -125,10 +125,12 @@ public class Maxima_ImageJ_UI {
 
                         } catch (MaximaTimeoutException ex) {
                             System.err.println(ex);
-                            JOptionPane.showMessageDialog(frame, ex.getMessage(),
+                            JOptionPane.showMessageDialog(null, ex.getMessage(),
                                     "ERROR", JOptionPane.ERROR_MESSAGE);
                         } catch (java.lang.IllegalArgumentException ex) {
-                            JOptionPane.showMessageDialog(frame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }catch(java.lang.StringIndexOutOfBoundsException ex){
+                            JOptionPane.showMessageDialog(null, ex.getMessage(), "No data", JOptionPane.ERROR_MESSAGE);                            
                         }
                     }
                 };

@@ -71,7 +71,9 @@ public class Maxima_Connect {
     private static void locateMaxima() {
         try {
             //use Winregistry to locate maxima in windows registry
-            List<String> ls = WinRegistry.readStringSubKeys(WinRegistry.HKEY_LOCAL_MACHINE, "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\", WinRegistry.KEY_WOW64_32KEY);
+            List<String> ls = WinRegistry.readStringSubKeys(WinRegistry.HKEY_LOCAL_MACHINE, 
+                    "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\",
+                    WinRegistry.KEY_WOW64_32KEY);
             String key = null;
             for (String s : ls) {
                 if (s.matches("Maxima.*")) {

@@ -4,6 +4,12 @@
  * and open the template in the editor.
  */
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -11,6 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import uk.ac.ed.ph.jacomax.MaximaInteractiveProcess;
+import uk.ac.ed.ph.jacomax.MaximaTimeoutException;
 
 /**
  *
@@ -51,5 +58,22 @@ public class Maxima_EvaluateTest {
         assertEquals(expResult, result);
     }
     
-    
+    @Test
+    public void testCalculate(){
+        try {
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter("jacomax.properties")));
+            pw.print("jacomax.maxima.path=C:\\\\Program Files (x86)\\\\Maxima-openmcl-5.36.1\\\\bin\\\\maxima.bat");
+        } catch (IOException ex) {
+            System.err.println(ex);
+        }
+        MaximaInteractiveProcess process = Maxima_Connect.startMaxima();
+        try {
+            assertEquals(Maxima_Evaluate.calculate("1+1;",process),"(%o1)                                  2\n" +
+                    "(%i2) ");
+        } catch (MaximaTimeoutException ex) {
+            System.out.println(ex);
+        }
+                Maxima_Connect.terminateMaxima(process);
+
+    }
 }
