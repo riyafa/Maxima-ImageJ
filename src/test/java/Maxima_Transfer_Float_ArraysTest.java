@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -22,7 +17,7 @@ import uk.ac.ed.ph.jacomax.MaximaInteractiveProcess;
  */
 public class Maxima_Transfer_Float_ArraysTest {
 
-    public Maxima_Transfer_Float_ArraysTest() {
+    /*public Maxima_Transfer_Float_ArraysTest() {
     }
 
     @BeforeClass
@@ -43,7 +38,7 @@ public class Maxima_Transfer_Float_ArraysTest {
 
     /**
      * Test of transferArray method, of class Maxima_Transfer_Float_Arrays.
-     */
+     
     @Test
     public void testTransferArray() throws Exception {
         System.out.println("transferArray");
@@ -66,6 +61,6 @@ public class Maxima_Transfer_Float_ArraysTest {
         assertEquals(expResult, result);
         Maxima_Connect.terminateMaxima(process);
 
-    }
+    }*/
 
 }
