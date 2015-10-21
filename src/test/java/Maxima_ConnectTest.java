@@ -23,7 +23,7 @@ import uk.ac.ed.ph.jacomax.MaximaInteractiveProcess;
  */
 public class Maxima_ConnectTest {
 
-    private PrintWriter pw;
+    /*private PrintWriter pw;
 
     public Maxima_ConnectTest() {
     }
@@ -53,7 +53,7 @@ public class Maxima_ConnectTest {
 
     /**
      * Test createProcess() method of Maxima_Connect for windows
-     */
+     
     public void testcreateProcess() {
         System.out.println("startMaxima");
 
@@ -66,7 +66,7 @@ public class Maxima_ConnectTest {
 
     /**
      * Test FrameVisibility value of Maxima_Connect for windows
-     */
+     
     @Test
     public void testFrameVisibility() {
         pw.print("jacomax.maxima.path=C:\\\\Program Files (x86)\\\\Maxima-openmcl-5.36.1\\\\bin\\\\maxima.bat");
@@ -77,7 +77,7 @@ public class Maxima_ConnectTest {
 
     /**
      * Test of terminateMaxima method, of class Maxima_Connect.
-     */
+     
     @Test
     public void testTerminateMaximaNull() {
         System.out.println("terminateMaxima");
