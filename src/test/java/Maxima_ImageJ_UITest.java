@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -30,7 +26,7 @@ import org.junit.Test;
  */
 public class Maxima_ImageJ_UITest extends JFCTestCase {
 
-    private Maxima_ImageJ_UI ui;
+    /*private Maxima_ImageJ_UI ui;
     private PrintWriter pw;
 
     public Maxima_ImageJ_UITest(String name) {
@@ -69,7 +65,7 @@ public class Maxima_ImageJ_UITest extends JFCTestCase {
 
     /**
      * Tests if the correct error message is shown if the input is empty
-     */
+     
     @Test
     public void testNullString() {
         NamedComponentFinder finder = new NamedComponentFinder(JComponent.class,
@@ -98,7 +94,7 @@ public class Maxima_ImageJ_UITest extends JFCTestCase {
     /**
      * Tests if the correct error message is shown if the input string is
      * syntactically wrong
-     */
+     
     @Test
     public void testInvalidString() {
         NamedComponentFinder finder = new NamedComponentFinder(JComponent.class,
@@ -146,5 +142,5 @@ public class Maxima_ImageJ_UITest extends JFCTestCase {
         
         assertEquals("Input text area  is empty", "", inputTextArea.getText());
         assertEquals("Result text area  is empty", "", resultTextArea.getText());
-    }
+    }*/
 }
