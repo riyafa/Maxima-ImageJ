@@ -25,7 +25,7 @@ import uk.ac.ed.ph.jacomax.MaximaTimeoutException;
  */
 public class Maxima_EvaluateTest {
     
-    public Maxima_EvaluateTest() {
+    /*public Maxima_EvaluateTest() {
     }
     
     @BeforeClass
@@ -47,7 +47,7 @@ public class Maxima_EvaluateTest {
     /**
      * Test of calculate method for null process, of class Maxima_Evaluate.
      * @throws java.lang.Exception
-     */
+     
     @Test
     public void testCalculateNull() throws Exception {
         System.out.println("calculate");
@@ -75,5 +75,5 @@ public class Maxima_EvaluateTest {
         }
                 Maxima_Connect.terminateMaxima(process);
 
-    }
+    }*/
 }
